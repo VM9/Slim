@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.6.3
+ * @version     2.6.4
  * @package     Slim
  *
  * MIT LICENSE
@@ -86,10 +86,10 @@ class PrettyExceptions extends \Slim\Middleware
     {
         $title = 'Slim Application Error';
         $code = $exception->getCode();
-        $message = htmlspecialchars($exception->getMessage());
+        $message = $exception->getMessage();
         $file = $exception->getFile();
         $line = $exception->getLine();
-        $trace = str_replace(array('#', "\n"), array('<div>#', '</div>'), htmlspecialchars($exception->getTraceAsString()));
+        $trace = str_replace(array('#', "\n"), array('<div>#', '</div>'), $exception->getTraceAsString());
         $html = sprintf('<h1>%s</h1>', $title);
         $html .= '<p>The application could not run because of the following error:</p>';
         $html .= '<h2>Details</h2>';
@@ -98,7 +98,7 @@ class PrettyExceptions extends \Slim\Middleware
             $html .= sprintf('<div><strong>Code:</strong> %s</div>', $code);
         }
         if ($message) {
-            $html .= sprintf('<div><strong>Message:</strong> %s</div>', $message);
+            $html .= sprintf('<div><strong>Message:</strong> <b style="color: red; font-size: 20px;">%s</b></div>', $message);
         }
         if ($file) {
             $html .= sprintf('<div><strong>File:</strong> %s</div>', $file);

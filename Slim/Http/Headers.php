@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Slim - a micro PHP 5 framework
  *
@@ -6,7 +7,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.6.3
+ * @version     2.6.4
  * @package     Slim
  *
  * MIT LICENSE
@@ -30,20 +31,20 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace Slim\Http;
 
- /**
-  * HTTP Headers
-  *
-  * @package Slim
-  * @author  Josh Lockhart
-  * @since   1.6.0
-  */
-class Headers extends \Slim\Helper\Set
-{
-    /********************************************************************************
-    * Static interface
-    *******************************************************************************/
+/**
+ * HTTP Headers
+ *
+ * @package Slim
+ * @author  Josh Lockhart
+ * @since   1.6.0
+ */
+class Headers extends \Slim\Helper\Set {
+    /*     * ******************************************************************************
+     * Static interface
+     * ***************************************************************************** */
 
     /**
      * Special-case HTTP headers that are otherwise unidentifiable as HTTP headers.
@@ -66,8 +67,7 @@ class Headers extends \Slim\Helper\Set
      * @param  array $data
      * @return array
      */
-    public static function extract($data)
-    {
+    public static function extract($data) {
         $results = array();
         foreach ($data as $key => $value) {
             $key = strtoupper($key);
@@ -79,20 +79,35 @@ class Headers extends \Slim\Helper\Set
             }
         }
 
-        return $results;
+        if (!function_exists('getallheaders')) {
+
+            function getallheaders() {
+                $headers = '';
+                foreach ($_SERVER as $name => $value) {
+                    if (substr($name, 0, 5) == 'HTTP_') {
+                        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+                    }
+                }
+                return $headers;
+            }
+
+        }
+
+
+        return array_merge($results, getallheaders()); //Não sei pq eles não usam essa função...
+//        return $results;
     }
 
-    /********************************************************************************
-    * Instance interface
-    *******************************************************************************/
+    /*     * ******************************************************************************
+     * Instance interface
+     * ***************************************************************************** */
 
     /**
      * Transform header name into canonical form
      * @param  string $key
      * @return string
      */
-    protected function normalizeKey($key)
-    {
+    protected function normalizeKey($key) {
         $key = strtolower($key);
         $key = str_replace(array('-', '_'), ' ', $key);
         $key = preg_replace('#^http #', '', $key);
@@ -101,4 +116,5 @@ class Headers extends \Slim\Helper\Set
 
         return $key;
     }
+
 }
