@@ -79,22 +79,15 @@ class Headers extends \Slim\Helper\Set {
             }
         }
 
-        if (!function_exists('getallheaders')) {
-
-            function getallheaders() {
-                $headers = '';
-                foreach ($_SERVER as $name => $value) {
-                    if (substr($name, 0, 5) == 'HTTP_') {
-                        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-                    }
-                }
-                return $headers;
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
             }
-
         }
 
 
-        return array_merge($results, getallheaders()); //Não sei pq eles não usam essa função...
+        return array_merge($results, $headers); //Não sei pq eles não usam essa função...
 //        return $results;
     }
 
