@@ -1332,7 +1332,7 @@ class Slim
 
         $this->applyHook('slim.after');
 
-        restore_error_handler();
+        //restore_error_handler(); //Slow down the application to 30ms to 5seconds disable till we do not upgrade it.
     }
 
     /**
